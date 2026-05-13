@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klever Kuche Proforma Generator</title>
+  <link rel="stylesheet" href="styles.css?v=mobile-card-width-1">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Klever Kuche</p>
+          <h1>Proforma Generator</h1>
+        </div>
+        <img class="app-logo" id="appLogo" alt="Klever Kuche logo">
+        <div class="top-actions">
+          <button class="ghost" id="resetBtn" type="button">Reset</button>
+          <button class="ghost" id="loadProjectBtn" type="button">Load Proforma</button>
+          <button class="primary" id="saveProjectBtn" type="button">Save Project</button>
+          <button class="primary" id="excelBtn" type="button">Save Excel</button>
+          <button class="primary dark" id="pdfBtn" type="button">Save PDF</button>
+          <input id="projectFileInput" type="file" accept=".json,.kkproforma,.csv,application/json,text/csv" hidden>
+        </div>
+      </header>
+
+      <div class="content-grid">
+        <section class="panel form-panel">
+          <div class="panel-header">
+            <h2>Project</h2>
+          </div>
+          <div class="form-grid">
+            <label>
+              Project ID
+              <input id="projectId" type="text" value="KK0001">
+            </label>
+            <label>
+              Client Name
+              <input id="clientName" type="text" value="Client Name">
+            </label>
+            <label>
+              Phone
+              <input id="clientPhone" type="text" value="+251">
+            </label>
+            <label>
+              Location
+              <input id="clientLocation" type="text" value="Addis Ababa">
+            </label>
+            <label>
+              Order Date
+              <input id="orderDate" type="date">
+            </label>
+            <label>
+              Prepared By
+              <input id="preparedBy" type="text" value="Sales">
+            </label>
+            <label>
+              Document Type
+              <select id="docType">
+                <option>Acknowledgement</option>
+                <option>Amendment</option>
+              </select>
+            </label>
+            <label>
+              Document Status
+              <select id="docStatus">
+                <option>Active</option>
+                <option>Cancelled</option>
+              </select>
+            </label>
+            <label>
+              Installation
+              <select id="installationScope">
+                <option>With Installation</option>
+                <option>Without Installation</option>
+              </select>
+            </label>
+            <label>
+              Accessories
+              <select id="accessoryScope">
+                <option>Without Accessories</option>
+                <option>With Accessories</option>
+              </select>
+            </label>
+            <label>
+              Delivery Days
+              <input id="deliveryDays" type="number" min="1" value="0" readonly>
+            </label>
+            <label>
+              Estimated Delivery Date
+              <input id="estimatedDeliveryDate" type="text" value="" readonly>
+            </label>
+          </div>
+        </section>
+
+        <section class="panel totals-panel">
+          <div class="metric">
+            <span>Total Area</span>
+            <strong id="metricArea">0.000 m2</strong>
+          </div>
+          <div class="metric">
+            <span>Subtotal</span>
+            <strong id="metricSubtotal">0 ETB</strong>
+          </div>
+          <div class="metric">
+            <span>VAT 15%</span>
+            <strong id="metricVat">0 ETB</strong>
+          </div>
+          <div class="metric total">
+            <span>Total</span>
+            <strong id="metricTotal">0 ETB</strong>
+          </div>
+        </section>
+      </div>
+
+      <section class="panel items-panel">
+        <div class="panel-header">
+          <h2>Items</h2>
+          <button class="primary" id="addItemBtn" type="button">Add Item</button>
+        </div>
+        <div class="table-wrap">
+          <table class="entry-table">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th>Nickname</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Inside Material</th>
+                <th>Outside Finish</th>
+                <th>Quality</th>
+                <th>Qty</th>
+                <th>Area m2</th>
+                <th>ETB/m2</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </section>
+
+    <aside class="preview-shell">
+      <section class="proforma-page" id="proformaPreview" aria-label="Proforma preview"></section>
+    </aside>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js?v=pdf-fix-2"></script>
+</body>
+</html>
