@@ -1072,18 +1072,22 @@ function openPdfTargetWindow() {
 }
 
 function finishPdfOutput(pdf, filename, pdfTarget, openInBrowser) {
-  if (openInBrowser && pdfTarget && !pdfTarget.closed) {
-    const blob = pdf.output("blob");
-    const url = URL.createObjectURL(blob);
-    pdfTarget.location.href = url;
+  const blob = pdf.output("blob");
+  const url = URL.createObjectURL(blob);
+
+  if (openInBrowser) {
+    if (pdfTarget && !pdfTarget.closed) {
+      pdfTarget.location.href = url;
+    } else {
+      // Pop-up was blocked — open PDF in the same tab; tap Back to return to the app
+      window.location.href = url;
+    }
     setTimeout(() => URL.revokeObjectURL(url), 120000);
     return;
   }
 
   pdf.save(filename);
-  if (openInBrowser) {
-    alert("If the PDF did not open, allow pop-ups for this page and try again.");
-  }
+  URL.revokeObjectURL(url);
 }
 
 function downloadExcelCsv() {
