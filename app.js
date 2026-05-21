@@ -522,7 +522,7 @@ function proformaMarkup(data) {
     </section>
 
     <section class="doc-section">
-      <div class="doc-section-title">Line Items</div>
+      <div class="doc-section-title">Items</div>
       <table class="doc-table">
         <thead>
           <tr>
@@ -578,13 +578,13 @@ function proformaMarkup(data) {
     <section class="doc-section terms">
       <div class="doc-section-title">Terms And Conditions</div>
       ${cancelled ? `<p class="cancelled-note">This proforma has been cancelled and should not be used for production, payment, or delivery approval.</p>` : ""}
-      <p>Payment Terms: A 50% advance payment is required upon approval of this proforma. The remaining 50% balance is payable at the production stage unless otherwise agreed in writing.</p>
-      <p>Scope of Work: This proforma covers only the furniture, cabinetry, and project items listed in the line item table.</p>
-      <p>Installation: ${escapeHtml(formatInstallationTerms(data.installationScope))}</p>
-      <p>Accessories: ${escapeHtml(formatAccessoryTerms(data.accessoryScope))}</p>
-      <p>Exclusions: Granite, marble, quartz, countertops, appliances, plumbing works, electrical works, civil works, site preparation, and any item not specifically listed in this proforma are not included.</p>
-      <p>Delivery Timeline: The estimated delivery period begins after final design approval and advance payment confirmation.</p>
-      <p>Variations and Amendments: Any requested change must be submitted before final design approval. After final design approval, amendments or changes are not accepted under this proforma unless Klever Kuche issues and approves a separate written agreement.</p>
+      <p><strong>Payment Terms</strong>A 50% advance payment is required upon approval of this proforma. The remaining 50% balance is payable at the production stage unless otherwise agreed in writing.</p>
+      <p><strong>Scope of Work</strong>This proforma covers only the furniture, cabinetry, and project items listed in the line item table.</p>
+      <p><strong>Installation</strong>${escapeHtml(formatInstallationTerms(data.installationScope))}</p>
+      <p><strong>Accessories</strong>${escapeHtml(formatAccessoryTerms(data.accessoryScope))}</p>
+      <p><strong>Exclusions</strong>Granite, marble, quartz, countertops, appliances, plumbing works, electrical works, civil works, site preparation, and any item not specifically listed in this proforma are not included.</p>
+      <p><strong>Delivery Timeline</strong>The estimated delivery period begins after final design approval and advance payment confirmation.</p>
+      <p><strong>Variations &amp; Amendments</strong>Any requested change must be submitted before final design approval. After final design approval, amendments or changes are not accepted under this proforma unless Klever Kuche issues and approves a separate written agreement.</p>
     </section>
   `;
 }
@@ -1123,15 +1123,19 @@ function findSafePageBreak(canvas, idealY, searchRange) {
   const ctx = canvas.getContext("2d");
   const width = canvas.width;
   const limit = Math.max(0, idealY - searchRange);
+  let bestY = idealY;
+  let bestWhite = 0;
   for (let y = Math.min(idealY, canvas.height - 1); y > limit; y--) {
     const data = ctx.getImageData(0, y, width, 1).data;
     let white = 0;
     for (let i = 0; i < data.length; i += 4) {
-      if (data[i] > 240 && data[i + 1] > 240 && data[i + 2] > 240) white++;
+      if (data[i] > 238 && data[i + 1] > 238 && data[i + 2] > 238) white++;
     }
-    if (white / width > 0.92) return y;
+    const ratio = white / width;
+    if (ratio > 0.95) return y;
+    if (ratio > bestWhite) { bestWhite = ratio; bestY = y; }
   }
-  return idealY;
+  return bestWhite > 0.80 ? bestY : idealY;
 }
 
 function downloadPdf() {
@@ -1174,7 +1178,7 @@ function downloadPdf() {
     const breaks = [0];
     let pos = pageHpx;
     while (pos < canvas.height) {
-      breaks.push(findSafePageBreak(canvas, pos, 80));
+      breaks.push(findSafePageBreak(canvas, pos, 200));
       pos = breaks[breaks.length - 1] + pageHpx;
     }
 

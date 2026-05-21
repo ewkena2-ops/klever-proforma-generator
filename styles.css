@@ -639,10 +639,18 @@ table {
 
 .terms {
   display: grid;
-  gap: 4px;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.35;
+  gap: 12px;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.terms p strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 @media (max-width: 1180px) {
