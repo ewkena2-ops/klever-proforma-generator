@@ -153,7 +153,7 @@ function resetGenerator() {
   if (!confirm("Reset project fields and items?")) return;
   els.projectId.value = "";
   els.clientName.value = "";
-  els.clientPhone.value = "";
+  els.clientPhone.value = "+251";
   els.clientLocation.value = "Addis Ababa";
   els.orderDate.value = new Date().toISOString().slice(0, 10);
   els.preparedBy.value = "";
