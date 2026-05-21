@@ -116,12 +116,12 @@ function loadPrices() {
 
 function resetGenerator() {
   if (!confirm("Reset project fields and items?")) return;
-  els.projectId.value = "KK0001";
-  els.clientName.value = "Client Name";
-  els.clientPhone.value = "+251";
+  els.projectId.value = "";
+  els.clientName.value = "";
+  els.clientPhone.value = "";
   els.clientLocation.value = "Addis Ababa";
   els.orderDate.value = new Date().toISOString().slice(0, 10);
-  els.preparedBy.value = "Sales";
+  els.preparedBy.value = "";
   els.docType.value = "Acknowledgement";
   els.docStatus.value = "Active";
   els.installationScope.value = "With Installation";
@@ -842,12 +842,12 @@ function applyProjectPayload(payload) {
   }
 
   const fields = payload.fields || payload.project || payload;
-  els.projectId.value = textOrFallback(fields.projectId, "KK0001");
-  els.clientName.value = textOrFallback(fields.clientName, "Client Name");
-  els.clientPhone.value = textOrFallback(fields.clientPhone, "+251");
+  els.projectId.value = textOrFallback(fields.projectId, "");
+  els.clientName.value = textOrFallback(fields.clientName, "");
+  els.clientPhone.value = textOrFallback(fields.clientPhone, "");
   els.clientLocation.value = textOrFallback(fields.clientLocation, "Addis Ababa");
   els.orderDate.value = toDateInputValue(fields.orderDate) || new Date().toISOString().slice(0, 10);
-  els.preparedBy.value = textOrFallback(fields.preparedBy, "Sales");
+  els.preparedBy.value = textOrFallback(fields.preparedBy, "");
   setSelectValue(els.docType, normalizeDocType(fields.docType), "Acknowledgement");
   setSelectValue(els.docStatus, normalizeDocStatus(fields.docStatus), "Active");
   setSelectValue(els.installationScope, normalizeInstallationScope(fields.installationScope), "With Installation");
