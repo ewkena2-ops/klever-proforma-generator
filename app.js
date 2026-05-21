@@ -19,6 +19,7 @@ const ROOMS = [
   "Aluminium",
   "Open Shelf",
   "Shoe Rack",
+  "Laundry",
   "Other"
 ];
 
