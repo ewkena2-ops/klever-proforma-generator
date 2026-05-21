@@ -64,8 +64,21 @@ function init() {
   els.orderDate.value = new Date().toISOString().slice(0, 10);
   document.getElementById("pdfBtn").textContent = getPdfButtonLabel();
   bindFormInputs();
+  bindPriceInputs();
   renderItems();
   renderPreview();
+}
+
+function bindPriceInputs() {
+  ["Cabinet", "Aluminium", "Other"].forEach(type => {
+    const input = document.getElementById("prices" + type);
+    if (!input) return;
+    input.value = state.prices[type] || 0;
+    input.addEventListener("input", () => {
+      state.prices[type] = toNumber(input.value);
+      try { localStorage.setItem("kk_proforma_prices", JSON.stringify(state.prices)); } catch (e) {}
+    });
+  });
 }
 
 function bindLogoFallback(img, className, text) {
@@ -337,6 +350,7 @@ function updateItem(index, input) {
     if (!previousDescription || previousDescription === defaultDescriptionForType(previousType)) {
       item.description = defaultDescriptionForType(item.itemType);
     }
+    item.price = state.prices[item.itemType] || DEFAULT_PRICES[item.itemType] || 0;
     renderItems();
     renderPreview();
     return;
