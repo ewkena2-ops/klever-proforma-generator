@@ -344,12 +344,17 @@ table {
 }
 
 .choice-options {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 20;
   display: grid;
   grid-template-columns: 1fr;
   gap: 5px;
-  margin-top: 6px;
+  min-width: 220px;
+  margin-top: 4px;
   padding: 6px;
-  max-height: 172px;
+  max-height: 220px;
   overflow-y: auto;
   background: #fff;
   border: 1px solid var(--line);
@@ -369,6 +374,7 @@ table {
   border-radius: 5px;
   font-size: 11px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .choice-option input {
