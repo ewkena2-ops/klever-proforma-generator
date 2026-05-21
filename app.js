@@ -64,9 +64,30 @@ function init() {
   els.orderDate.value = new Date().toISOString().slice(0, 10);
   document.getElementById("pdfBtn").textContent = getPdfButtonLabel();
   bindFormInputs();
+  bindPreparedBy();
   bindPriceInputs();
   renderItems();
   renderPreview();
+}
+
+function bindPreparedBy() {
+  const select = document.getElementById("preparedBy");
+  const other = document.getElementById("preparedByOther");
+  if (!select || !other) return;
+  select.addEventListener("change", () => {
+    const isOther = select.value === "__other__";
+    other.style.display = isOther ? "" : "none";
+    if (isOther) other.focus();
+    renderPreview();
+  });
+  other.addEventListener("input", renderPreview);
+}
+
+function getPreparedBy() {
+  const select = document.getElementById("preparedBy");
+  const other = document.getElementById("preparedByOther");
+  if (select && select.value === "__other__") return (other ? other.value.trim() : "") || "";
+  return select ? select.value.trim() : "";
 }
 
 function bindPriceInputs() {
@@ -136,6 +157,8 @@ function resetGenerator() {
   els.clientLocation.value = "Addis Ababa";
   els.orderDate.value = new Date().toISOString().slice(0, 10);
   els.preparedBy.value = "";
+  const resetOther = document.getElementById("preparedByOther");
+  if (resetOther) { resetOther.value = ""; resetOther.style.display = "none"; }
   els.docType.value = "Acknowledgement";
   els.docStatus.value = "Active";
   els.installationScope.value = "With Installation";
@@ -401,7 +424,7 @@ function getDocData() {
     clientPhone: els.clientPhone.value.trim(),
     clientLocation: els.clientLocation.value.trim(),
     orderDate: formatDate(els.orderDate.value),
-    preparedBy: els.preparedBy.value.trim() || "Sales",
+    preparedBy: getPreparedBy() || "Sales",
     docType: els.docType.value,
     docStatus: els.docStatus.value,
     installationScope: els.installationScope.value,
@@ -753,7 +776,7 @@ function getProjectPayload() {
       clientPhone: els.clientPhone.value.trim(),
       clientLocation: els.clientLocation.value.trim(),
       orderDate: els.orderDate.value,
-      preparedBy: els.preparedBy.value.trim() || "Sales",
+      preparedBy: getPreparedBy() || "Sales",
       docType: els.docType.value,
       docStatus: els.docStatus.value,
       installationScope: els.installationScope.value,
@@ -862,7 +885,17 @@ function applyProjectPayload(payload) {
   els.clientPhone.value = textOrFallback(fields.clientPhone, "");
   els.clientLocation.value = textOrFallback(fields.clientLocation, "Addis Ababa");
   els.orderDate.value = toDateInputValue(fields.orderDate) || new Date().toISOString().slice(0, 10);
-  els.preparedBy.value = textOrFallback(fields.preparedBy, "");
+  const preparedByVal = textOrFallback(fields.preparedBy, "");
+  const knownNames = ["", "Ephrata", "Tsega", "Bruktawit"];
+  if (knownNames.includes(preparedByVal)) {
+    els.preparedBy.value = preparedByVal;
+    const otherInput = document.getElementById("preparedByOther");
+    if (otherInput) { otherInput.value = ""; otherInput.style.display = "none"; }
+  } else {
+    els.preparedBy.value = "__other__";
+    const otherInput = document.getElementById("preparedByOther");
+    if (otherInput) { otherInput.value = preparedByVal; otherInput.style.display = ""; }
+  }
   setSelectValue(els.docType, normalizeDocType(fields.docType), "Acknowledgement");
   setSelectValue(els.docStatus, normalizeDocStatus(fields.docStatus), "Active");
   setSelectValue(els.installationScope, normalizeInstallationScope(fields.installationScope), "With Installation");
