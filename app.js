@@ -438,6 +438,27 @@ function getDocData() {
   };
 }
 
+const PAGE_H = 1123;
+const MIN_SCALE = 0.68;
+
+function autoScaleProforma() {
+  const page = els.preview;
+  const content = page && page.querySelector(".doc-content");
+  if (!content) return;
+  content.style.transform = "";
+  content.style.transformOrigin = "";
+  page.style.minHeight = "";
+  const naturalH = content.scrollHeight;
+  if (naturalH <= PAGE_H) {
+    page.style.minHeight = PAGE_H + "px";
+    return;
+  }
+  const scale = Math.max(MIN_SCALE, PAGE_H / naturalH);
+  content.style.transformOrigin = "top left";
+  content.style.transform = `scale(${scale})`;
+  page.style.minHeight = Math.ceil(naturalH * scale) + "px";
+}
+
 function renderPreview() {
   const data = getDocData();
   els.deliveryDays.value = data.deliveryDays;
@@ -446,7 +467,8 @@ function renderPreview() {
   els.metricSubtotal.textContent = money(data.subtotal);
   els.metricVat.textContent = money(data.vat);
   els.metricTotal.textContent = money(data.total);
-  els.preview.innerHTML = proformaMarkup(data);
+  els.preview.innerHTML = `<div class="doc-content">${proformaMarkup(data)}</div>`;
+  autoScaleProforma();
 }
 
 function isCancelledDoc(data) {
@@ -578,13 +600,13 @@ function proformaMarkup(data) {
     <section class="doc-section terms">
       <div class="doc-section-title">Terms And Conditions</div>
       ${cancelled ? `<p class="cancelled-note">This proforma has been cancelled and should not be used for production, payment, or delivery approval.</p>` : ""}
-      <p><strong>Payment Terms</strong>A 50% advance payment is required upon approval of this proforma. The remaining 50% balance is payable at the production stage unless otherwise agreed in writing.</p>
-      <p><strong>Scope of Work</strong>This proforma covers only the furniture, cabinetry, and project items listed in the line item table.</p>
-      <p><strong>Installation</strong>${escapeHtml(formatInstallationTerms(data.installationScope))}</p>
-      <p><strong>Accessories</strong>${escapeHtml(formatAccessoryTerms(data.accessoryScope))}</p>
-      <p><strong>Exclusions</strong>Granite, marble, quartz, countertops, appliances, plumbing works, electrical works, civil works, site preparation, and any item not specifically listed in this proforma are not included.</p>
-      <p><strong>Delivery Timeline</strong>The estimated delivery period begins after final design approval and advance payment confirmation.</p>
-      <p><strong>Variations &amp; Amendments</strong>Any requested change must be submitted before final design approval. After final design approval, amendments or changes are not accepted under this proforma unless Klever Kuche issues and approves a separate written agreement.</p>
+      <p><strong>Payment Terms:</strong> A 50% advance payment is required upon approval of this proforma. The remaining 50% balance is payable at the production stage unless otherwise agreed in writing.</p>
+      <p><strong>Scope of Work:</strong> This proforma covers only the furniture, cabinetry, and project items listed in the line item table.</p>
+      <p><strong>Installation:</strong> ${escapeHtml(formatInstallationTerms(data.installationScope))}</p>
+      <p><strong>Accessories:</strong> ${escapeHtml(formatAccessoryTerms(data.accessoryScope))}</p>
+      <p><strong>Exclusions:</strong> Granite, marble, quartz, countertops, appliances, plumbing works, electrical works, civil works, site preparation, and any item not specifically listed in this proforma are not included.</p>
+      <p><strong>Delivery Timeline:</strong> The estimated delivery period begins after final design approval and advance payment confirmation.</p>
+      <p><strong>Variations &amp; Amendments:</strong> Any requested change must be submitted before final design approval. After final design approval, amendments or changes are not accepted under this proforma unless Klever Kuche issues and approves a separate written agreement.</p>
     </section>
   `;
 }
@@ -1154,6 +1176,10 @@ function downloadPdf() {
   element.style.width = "794px";
   element.style.transform = "none";
   element.style.boxShadow = "none";
+  element.style.minHeight = "";
+  const docContent = element.querySelector(".doc-content");
+  const savedContentTransform = docContent ? docContent.style.transform : "";
+  if (docContent) { docContent.style.transform = ""; docContent.style.transformOrigin = ""; }
 
   html2canvas(element, {
     scale: getPdfCanvasScale(),
@@ -1208,6 +1234,8 @@ function downloadPdf() {
     element.style.width = saved.width;
     element.style.transform = saved.transform;
     element.style.boxShadow = saved.boxShadow;
+    if (docContent) docContent.style.transform = savedContentTransform;
+    autoScaleProforma();
     btn.disabled = false;
     btn.textContent = getPdfButtonLabel();
   });
