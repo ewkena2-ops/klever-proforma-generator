@@ -513,9 +513,9 @@ function proformaMarkup(data) {
           </tr>
           <tr>
             <td class="label">Installation</td>
-            <td>${escapeHtml(data.installationScope)}</td>
+            <td>${data.installationScope === "With Installation" ? "Included" : "Not Included"}</td>
             <td class="label">Accessories</td>
-            <td>${escapeHtml(data.accessoryScope)}</td>
+            <td>${data.accessoryScope === "With Accessories" ? "Included" : "Not Included"}</td>
           </tr>
         </tbody>
       </table>
