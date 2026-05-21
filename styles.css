@@ -344,10 +344,6 @@ table {
 }
 
 .choice-options {
-  position: absolute;
-  left: 0;
-  top: 100%;
-  z-index: 20;
   display: grid;
   grid-template-columns: 1fr;
   gap: 5px;

@@ -218,27 +218,67 @@ function renderItems() {
     tr.querySelector(".remove-row").addEventListener("click", () => removeItem(index));
     els.itemsBody.appendChild(tr);
   });
-  if (window.innerWidth <= 760) initChoiceSheets();
+  initChoicePickers();
 }
 
 let _choiceBackdrop = null;
 
-function initChoiceSheets() {
+function initChoicePickers() {
   document.querySelectorAll(".choice-picker").forEach(picker => {
     picker.addEventListener("toggle", function () {
       if (this.open) {
-        if (!_choiceBackdrop) {
-          _choiceBackdrop = document.createElement("div");
-          _choiceBackdrop.className = "choice-sheet-backdrop";
-          document.body.appendChild(_choiceBackdrop);
-        }
-        _choiceBackdrop.onclick = () => { picker.open = false; };
+        closeAllChoicePickers(this);
+        if (window.innerWidth > 760) positionChoiceDropdown(this);
+        else showChoiceBackdrop(this);
       } else {
-        if (_choiceBackdrop) { _choiceBackdrop.remove(); _choiceBackdrop = null; }
+        resetChoiceDropdown(this);
+        hideChoiceBackdrop();
       }
     });
   });
 }
+
+function closeAllChoicePickers(except) {
+  document.querySelectorAll(".choice-picker[open]").forEach(other => {
+    if (other !== except) {
+      resetChoiceDropdown(other);
+      other.removeAttribute("open");
+    }
+  });
+}
+
+function positionChoiceDropdown(picker) {
+  const summary = picker.querySelector("summary");
+  const options = picker.querySelector(".choice-options");
+  if (!summary || !options) return;
+  const rect = summary.getBoundingClientRect();
+  options.style.cssText = `position:fixed;top:${rect.bottom + 4}px;left:${rect.left}px;min-width:${Math.max(220, rect.width)}px;z-index:200;`;
+}
+
+function resetChoiceDropdown(picker) {
+  const options = picker.querySelector(".choice-options");
+  if (options) options.style.cssText = "";
+}
+
+function showChoiceBackdrop(picker) {
+  hideChoiceBackdrop();
+  _choiceBackdrop = document.createElement("div");
+  _choiceBackdrop.className = "choice-sheet-backdrop";
+  _choiceBackdrop.onclick = () => { picker.open = false; };
+  document.body.appendChild(_choiceBackdrop);
+}
+
+function hideChoiceBackdrop() {
+  if (_choiceBackdrop) { _choiceBackdrop.remove(); _choiceBackdrop = null; }
+}
+
+document.addEventListener("scroll", () => {
+  document.querySelectorAll(".choice-picker[open]").forEach(picker => {
+    resetChoiceDropdown(picker);
+    picker.removeAttribute("open");
+  });
+  hideChoiceBackdrop();
+}, true);
 
 function selectHtml(field, options, value) {
   const opts = options.map(option => {
