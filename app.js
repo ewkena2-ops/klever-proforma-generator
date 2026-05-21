@@ -125,7 +125,7 @@ function resetGenerator() {
   els.docType.value = "Acknowledgement";
   els.docStatus.value = "Active";
   els.installationScope.value = "With Installation";
-  els.accessoryScope.value = "Without Accessories";
+  els.accessoryScope.value = "With Accessories";
   els.deliveryDays.value = 0;
   els.estimatedDeliveryDate.value = "";
   state.items = [createDefaultItem()];
