@@ -218,6 +218,26 @@ function renderItems() {
     tr.querySelector(".remove-row").addEventListener("click", () => removeItem(index));
     els.itemsBody.appendChild(tr);
   });
+  if (window.innerWidth <= 760) initChoiceSheets();
+}
+
+let _choiceBackdrop = null;
+
+function initChoiceSheets() {
+  document.querySelectorAll(".choice-picker").forEach(picker => {
+    picker.addEventListener("toggle", function () {
+      if (this.open) {
+        if (!_choiceBackdrop) {
+          _choiceBackdrop = document.createElement("div");
+          _choiceBackdrop.className = "choice-sheet-backdrop";
+          document.body.appendChild(_choiceBackdrop);
+        }
+        _choiceBackdrop.onclick = () => { picker.open = false; };
+      } else {
+        if (_choiceBackdrop) { _choiceBackdrop.remove(); _choiceBackdrop = null; }
+      }
+    });
+  });
 }
 
 function selectHtml(field, options, value) {
