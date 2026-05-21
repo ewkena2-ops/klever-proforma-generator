@@ -18,10 +18,9 @@
         <div class="top-actions">
           <button class="ghost" id="resetBtn" type="button">Reset</button>
           <button class="ghost" id="loadProjectBtn" type="button">Load Proforma</button>
-          <button class="primary" id="saveProjectBtn" type="button">Save Project</button>
           <button class="primary" id="excelBtn" type="button">Save Excel</button>
           <button class="primary dark" id="pdfBtn" type="button">Save PDF</button>
-          <input id="projectFileInput" type="file" accept=".json,.kkproforma,.csv,application/json,text/csv" hidden>
+          <input id="projectFileInput" type="file" accept=".json,.kkproforma,.csv,.pdf,application/json,text/csv,application/pdf" hidden>
         </div>
       </header>
 
@@ -60,6 +59,7 @@
               <select id="docType">
                 <option>Acknowledgement</option>
                 <option>Amendment</option>
+                <option>Proforma</option>
               </select>
             </label>
             <label>
@@ -151,6 +151,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="app.js?v=pdf-fix-2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="app.js?v=pdf-load-1"></script>
 </body>
 </html>
