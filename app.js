@@ -1,5 +1,5 @@
 const DEFAULT_PRICES = {
-  "Cabinet": 21000,
+  "Cabinet": 26000,
   "Aluminium": 28000,
   "Other": 0
 };
