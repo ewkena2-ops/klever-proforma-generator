@@ -602,6 +602,7 @@ function proformaMarkup(data) {
       ${cancelled ? `<p class="cancelled-note">This proforma has been cancelled and should not be used for production, payment, or delivery approval.</p>` : ""}
       <p><strong>Payment Terms:</strong> A 50% advance payment is required upon approval of this proforma. The remaining 50% balance is payable at the production stage unless otherwise agreed in writing.</p>
       <p><strong>Scope of Work:</strong> This proforma covers only the furniture, cabinetry, and project items listed in the line item table.</p>
+      <p><strong>Body Back Panel:</strong> The cabinet body back panel is supplied in either 6 mm or 3 mm thickness, determined by the body material type selected. The applicable thickness follows the standard specification of the chosen material and is not considered a variation to this proforma.</p>
       <p><strong>Installation:</strong> ${escapeHtml(formatInstallationTerms(data.installationScope))}</p>
       <p><strong>Accessories:</strong> ${escapeHtml(formatAccessoryTerms(data.accessoryScope))}</p>
       <p><strong>Exclusions:</strong> Granite, marble, quartz, countertops, appliances, plumbing works, electrical works, civil works, site preparation, and any item not specifically listed in this proforma are not included.</p>
