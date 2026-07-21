@@ -11,6 +11,7 @@ Standalone local proforma generator.
 - Set Document Status to `Cancelled` to mark the proforma as cancelled in the preview and PDF.
 - Choose whether the proforma is with or without installation, and with or without accessories; the terms update automatically.
 - Terms and conditions always exclude granite, marble, quartz, and countertops.
+- Every proforma is valid for 15 days from the order date. The expiry date is shown as `Valid Until` and the terms state the proforma becomes invalid if the advance payment is not received by then.
 - Item quantity multiplies area, price, total area, VAT, and final total.
 - Cabinet material is split into inside material, outside finish, and quality level. Outside finishes include UV / HDF, UV / Solid Wood, Super Matt / HDF, Super Matt / Solid Wood, Laminate MDF, and Painted MDF.
 - New cabinet rows start with no outside finish selected.

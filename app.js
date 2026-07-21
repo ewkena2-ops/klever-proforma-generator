@@ -4,6 +4,8 @@ const DEFAULT_PRICES = {
   "Other": 0
 };
 
+const VALIDITY_DAYS = 15;
+
 const LOCAL_LOGO_URL = "logo.png";
 const RAW_LOGO_URL = "https://raw.githubusercontent.com/ewkena2-ops/klever-proforma-generator/main/logo.png";
 const CONFIG_LOGO_URL = "https://drive.google.com/uc?export=view&id=1t-dPbpxjtt3kdD_dYm3QkmZKf2Qt7M36";
@@ -418,6 +420,7 @@ function getDocData() {
   const area = state.items.reduce((sum, item) => sum + rowArea(item), 0);
   const deliveryDays = calculateDeliveryDays(area);
   const estimatedDeliveryDate = calculateEstimatedDeliveryDate(els.orderDate.value, deliveryDays);
+  const validUntil = calculateValidUntilDate(els.orderDate.value);
   return {
     projectId: els.projectId.value.trim() || "KK0001",
     clientName: els.clientName.value.trim() || "Client",
@@ -431,6 +434,7 @@ function getDocData() {
     accessoryScope: els.accessoryScope.value,
     deliveryDays,
     estimatedDeliveryDate,
+    validUntil,
     subtotal,
     vat,
     total,
@@ -539,6 +543,12 @@ function proformaMarkup(data) {
             <td class="label">Accessories</td>
             <td>${data.accessoryScope === "With Accessories" ? "Included" : "Not Included"}</td>
           </tr>
+          <tr>
+            <td class="label">Valid Until</td>
+            <td>${escapeHtml(data.validUntil)}</td>
+            <td class="label">Validity</td>
+            <td>${VALIDITY_DAYS} days from order date. Invalid if unpaid after this date.</td>
+          </tr>
         </tbody>
       </table>
     </section>
@@ -600,6 +610,7 @@ function proformaMarkup(data) {
     <section class="doc-section terms">
       <div class="doc-section-title">Terms And Conditions</div>
       ${cancelled ? `<p class="cancelled-note">This proforma has been cancelled and should not be used for production, payment, or delivery approval.</p>` : ""}
+      <p><strong>Validity:</strong> This proforma is valid for ${VALIDITY_DAYS} days from the order date${data.validUntil ? `, expiring on ${escapeHtml(data.validUntil)}` : ""}. If the advance payment is not received within this period, this proforma becomes invalid and the prices, terms, and delivery timeline stated here no longer apply. A new proforma must be requested.</p>
       <p><strong>Payment Terms:</strong> A 50% advance payment is required upon approval of this proforma. The remaining 50% balance is payable at the production stage unless otherwise agreed in writing.</p>
       <p><strong>Scope of Work:</strong> This proforma covers only the furniture, cabinetry, and project items listed in the line item table.</p>
       <p><strong>Body Back Panel:</strong> The cabinet body back panel is supplied in either 6 mm or 3 mm thickness, determined by the body material type selected. The applicable thickness follows the standard specification of the chosen material and is not considered a variation to this proforma.</p>
@@ -736,6 +747,13 @@ function calculateEstimatedDeliveryDate(orderDateValue, days) {
   const base = orderDateValue ? new Date(`${orderDateValue}T00:00:00`) : new Date();
   if (Number.isNaN(base.getTime())) return "";
   base.setDate(base.getDate() + Math.max(0, Math.round(toNumber(days))));
+  return formatDisplayDate(base);
+}
+
+function calculateValidUntilDate(orderDateValue) {
+  const base = orderDateValue ? new Date(`${orderDateValue}T00:00:00`) : new Date();
+  if (Number.isNaN(base.getTime())) return "";
+  base.setDate(base.getDate() + VALIDITY_DAYS);
   return formatDisplayDate(base);
 }
 
@@ -1305,6 +1323,7 @@ function downloadExcelCsv() {
     ["Phone", data.clientPhone],
     ["Location", data.clientLocation],
     ["Order Date", data.orderDate],
+    ["Valid Until", data.validUntil],
     ["Prepared By", data.preparedBy],
     ["Delivery Days", data.deliveryDays],
     [],
